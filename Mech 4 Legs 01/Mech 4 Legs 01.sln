@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mech 4 Legs 01", "Mech 4 Legs 01\Mech 4 Legs 01.csproj", "{71216315-0A47-47AC-8AF9-5DD33E96FA7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71216315-0A47-47AC-8AF9-5DD33E96FA7F}.Debug|x64.ActiveCfg = Debug|x64
+		{71216315-0A47-47AC-8AF9-5DD33E96FA7F}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {57799177-D776-4823-AD0D-A53818E7F049}
+	EndGlobalSection
+EndGlobal
