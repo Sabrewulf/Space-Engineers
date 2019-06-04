@@ -20,34 +20,14 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
-        // This file contains your actual script.
-        //
-        // You can either keep all your code here, or you can create separate
-        // code files to make your program easier to navigate while coding.
-        //
-        // In order to add a new utility class, right-click on your project, 
-        // select 'New' then 'Add Item...'. Now find the 'Space Engineers'
-        // category under 'Visual C# Items' on the left hand side, and select
-        // 'Utility Class' in the main area. Name it in the box below, and
-        // press OK. This utility class will be merged in with your code when
-        // deploying your final script.
-        //
-        // You can also simply create a new utility class manually, you don't
-        // have to use the template if you don't want to. Just do so the first
-        // time to see what a utility class looks like.
+
+
+        List<IMyTerminalBlock> rotorList = new List<IMyTerminalBlock>();
 
         public Program()
         {
-            // The constructor, called only once every session and
-            // always before any other method is called. Use it to
-            // initialize your script. 
-            //     
-            // The constructor is optional and can be removed if not
-            // needed.
-            // 
-            // It's recommended to set RuntimeInfo.UpdateFrequency 
-            // here, which will allow your script to run itself without a 
-            // timer block.
+            Runtime.UpdateFrequency = UpdateFrequency.Update10;
+            HardwareCheck();
         }
 
         public void Save()
@@ -62,15 +42,61 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
-            // The main entry point of the script, invoked every time
-            // one of the programmable block's Run actions are invoked,
-            // or the script updates itself. The updateSource argument
-            // describes where the update came from. Be aware that the
-            // updateSource is a  bitfield  and might contain more than 
-            // one update type.
-            // 
-            // The method itself is required, but the arguments above
-            // can be removed if not needed.
+
+        }
+
+        public void HardwareCheck()
+        {
+            // block declarations
+            string ERR_TXT = "";
+            string[] rightParts = new string[4];
+            string[] leftParts = new string[4];
+            rightParts[0] = "Hip FR"; rightParts[1] = "Hip BR"; rightParts[2] = "Knee FR"; rightParts[3] = "Knee BR";
+            leftParts[0] = "Hip FL"; leftParts[1] = "Hip BL"; leftParts[2] = "Knee FL"; leftParts[3] = "Knee BL";
+
+            var debugLCD = GridTerminalSystem.GetBlockWithName("LCD Debug") as IMyTextPanel;
+            debugLCD.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
+
+
+            GridTerminalSystem.GetBlocksOfType<IMyMotorStator>(rotorList);
+
+            if (rotorList.Count == 0)
+            {
+                ERR_TXT += "no Rotor blocks found\n";
+            }
+            else
+            {
+                for (int i = 0; i < rotorList.Count; i++)
+                {
+                    for (int j = 0; j < rightParts.Length; j++)
+                    {
+                        bool test = false;
+                        if (rotorList[i].CustomName == rightParts[j])
+                        {
+                            test = true;
+                        }
+                        if (test == false)
+                        {
+                            ERR_TXT += rightParts[j] + " not found\n";
+                        }
+                    }
+
+                }
+            }
+            // display errors
+            if (ERR_TXT != "")
+            {
+                Echo("Hardware Errors:\n" + ERR_TXT);
+                debugLCD.WriteText(ERR_TXT, true);
+            }
+            else
+            {
+                Echo("");
+                debugLCD.WriteText(ERR_TXT, true);
+            }
+
+            // logic
+            return;
         }
     }
 }
