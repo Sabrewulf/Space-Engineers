@@ -15,6 +15,7 @@ using VRage.Game.ModAPI.Ingame.Utilities;
 using VRage.Game.ObjectBuilders.Definitions;
 using VRage.Game;
 using VRageMath;
+using VRage.Game.GUI.TextPanel;
 
 namespace IngameScript
 {
@@ -23,7 +24,8 @@ namespace IngameScript
 
 
         List<IMyTerminalBlock> rotorList = new List<IMyTerminalBlock>();
-
+ 
+        
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
@@ -42,7 +44,7 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
-
+            
         }
 
         public void HardwareCheck()
@@ -55,9 +57,8 @@ namespace IngameScript
             leftParts[0] = "Hip FL"; leftParts[1] = "Hip BL"; leftParts[2] = "Knee FL"; leftParts[3] = "Knee BL";
 
             var debugLCD = GridTerminalSystem.GetBlockWithName("LCD Debug") as IMyTextPanel;
-            debugLCD.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
-
-
+            debugLCD.ContentType = ContentType.TEXT_AND_IMAGE;
+            
             GridTerminalSystem.GetBlocksOfType<IMyMotorStator>(rotorList);
 
             if (rotorList.Count == 0)
@@ -70,33 +71,39 @@ namespace IngameScript
                 {
                     for (int j = 0; j < rightParts.Length; j++)
                     {
-                        bool test = false;
                         if (rotorList[i].CustomName == rightParts[j])
                         {
-                            test = true;
+                            ERR_TXT += rightParts[j] + " OK\n";
                         }
-                        if (test == false)
-                        {
-                            ERR_TXT += rightParts[j] + " not found\n";
-                        }
+
                     }
 
                 }
             }
+            
+            int mark = DateTime.Now.Second;
+            int pointmark = mark + 3;
+            debugLCD.WriteText("tempo inicial" + mark, true);
+
+            if (pointmark == 60) { pointmark = 0; }
+            if (pointmark == 61) { pointmark = 1; }
+            if (pointmark == 62) { pointmark = 2; }
+            if (pointmark == 63) { pointmark = 3; }
             // display errors
+            while (mark != pointmark)
+            {
+                
+            }
             if (ERR_TXT != "")
             {
-                Echo("Hardware Errors:\n" + ERR_TXT);
-                debugLCD.WriteText(ERR_TXT, true);
+                Echo("Hardware:\n" + ERR_TXT);
+                debugLCD.WriteText(ERR_TXT + pointmark, true);
             }
             else
             {
                 Echo("");
                 debugLCD.WriteText(ERR_TXT, true);
             }
-
-            // logic
-            return;
         }
     }
 }
