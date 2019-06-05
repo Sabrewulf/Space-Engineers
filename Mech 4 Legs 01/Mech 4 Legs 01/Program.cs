@@ -50,7 +50,7 @@ namespace IngameScript
 
         public void HardwareCheck()
         {
-            if (++ticks < 18) return; // for delay
+            if (++ticks < 18) return; // for learn to delay
 
             screenOne = GridTerminalSystem.GetBlockWithName("LCD Debug") as IMyTextPanel;
             screenOne.ContentType = ContentType.TEXT_AND_IMAGE;
