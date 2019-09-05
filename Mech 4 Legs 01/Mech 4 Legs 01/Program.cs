@@ -25,75 +25,62 @@ namespace IngameScript
         IMyTextPanel screenOne; //trying to put lcd variable here
         List<IMyTerminalBlock> blockList = new List<IMyTerminalBlock>();
         int ticks = 0;
-        
+
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
-            
         }
 
-        public void Save()
+        void Main(string argument)
         {
-            // Called when the program needs to save its state. Use
-            // this method to save your state to the Storage field
-            // or some other means. 
-            // 
-            // This method is optional and can be removed if not
-            // needed.
+            /*string ERR_TXT = ""*/
+            ;
+            // right joints declarations
+            string Hip_HFR = "Hip HFR"; string Hip_HBR = "Hip HBR";
+            string Hip_VFR = "Hip VFR"; string Hip_VBR = "Hip VBR";
+            string Knee_FR = "Knee FR"; string Knee_BR = "Knee BR";
+            var HipHFR = GridTerminalSystem.GetBlockWithName(Hip_HFR) as IMyMotorStator;
+            var HipHBR = GridTerminalSystem.GetBlockWithName(Hip_HBR) as IMyMotorStator;
+            var HipVFR = GridTerminalSystem.GetBlockWithName(Hip_VFR) as IMyMotorStator;
+            var HipVBR = GridTerminalSystem.GetBlockWithName(Hip_VBR) as IMyMotorStator;
+            var KneeFR = GridTerminalSystem.GetBlockWithName(Knee_FR) as IMyMotorStator;
+            var KneeBR = GridTerminalSystem.GetBlockWithName(Knee_BR) as IMyMotorStator;
+            // left joints declarations
+            string Hip_HFL = "Hip HFL"; string Hip_HBL = "Hip HBL";
+            string Hip_VFL = "Hip VFL"; string Hip_VBL = "Hip VBL";
+            string Knee_FL = "Knee FL"; string Knee_BL = "Knee BL";
+            var HipHFL = GridTerminalSystem.GetBlockWithName(Hip_HFL) as IMyMotorStator;
+            var HipHBL = GridTerminalSystem.GetBlockWithName(Hip_HBL) as IMyMotorStator;
+            var HipVFL = GridTerminalSystem.GetBlockWithName(Hip_VFL) as IMyMotorStator;
+            var HipVBL = GridTerminalSystem.GetBlockWithName(Hip_VBL) as IMyMotorStator;
+            var KneeFL = GridTerminalSystem.GetBlockWithName(Knee_FL) as IMyMotorStator;
+            var KneeBL = GridTerminalSystem.GetBlockWithName(Knee_BL) as IMyMotorStator;
+            // mod control module declarations
+            var inputs = Me.GetValue<Dictionary<string, object>>("ControlModule.Inputs");
+
+            // LCD declarations
+            var statusLegsLCD = GridTerminalSystem.GetBlockWithName("LCD Legs Status") as IMyTextPanel;
+
+            // display errors
+            if (statusLegsLCD != null) {
+                statusLegsLCD.ContentType = ContentType.TEXT_AND_IMAGE;
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+            }
+            else { Echo("Status LCD missing", true); }
+            // logic
+
         }
 
-        public void Main(string argument, UpdateType updateSource)
-        {
-            HardwareCheck();
-
-        }
-
-        public void HardwareCheck()
-        {
-            if (++ticks < 18) return; // for learn to delay
-
-            screenOne = GridTerminalSystem.GetBlockWithName("LCD Debug") as IMyTextPanel;
-            screenOne.ContentType = ContentType.TEXT_AND_IMAGE;
-            screenOne.WriteText("Hardware Check Timer " +ticks+ "\n", false);
-
-            string ERR_TXT = "";
-            string[] rightParts = new string[4];
-            string[] leftParts = new string[4];
-            rightParts[0] = "Hip FR"; rightParts[1] = "Hip BR"; rightParts[2] = "Knee FR"; rightParts[3] = "Knee BR";
-            leftParts[0] = "Hip FL"; leftParts[1] = "Hip BL"; leftParts[2] = "Knee FL"; leftParts[3] = "Knee BL";
-
-            GridTerminalSystem.GetBlocksOfType<IMyFunctionalBlock>(blockList);
-
-            if (blockList.Count == 0)
-            {
-                ERR_TXT += "no Rotor blocks found\n";
-            }
-            else
-            {
-                for (int i = 0; i < blockList.Count; i++)
-                {
-                    for (int j = 0; j < rightParts.Length; j++)
-                    {
-                        if (blockList[i].CustomName == rightParts[j])
-                        {
-                            ERR_TXT += rightParts[j] + " OK\n";
-                        }
-
-                    }
-
-                }
-            }
-
-            if (ERR_TXT != "")
-            {
-                Echo("Hardware:\n" + ERR_TXT);
-                screenOne.WriteText("Hardware:\n"+ERR_TXT, true);
-            }
-            else
-            {
-                Echo("");
-                screenOne.WriteText(ERR_TXT, true);
-            }
-        }
     }
 }
