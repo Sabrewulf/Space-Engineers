@@ -22,10 +22,6 @@ namespace IngameScript
     partial class Program : MyGridProgram
     {
 
-        IMyTextPanel screenOne; //trying to put lcd variable here
-        List<IMyTerminalBlock> blockList = new List<IMyTerminalBlock>();
-        int ticks = 0;
-
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
@@ -57,29 +53,46 @@ namespace IngameScript
             var KneeBL = GridTerminalSystem.GetBlockWithName(Knee_BL) as IMyMotorStator;
             // mod control module declarations
             var inputs = Me.GetValue<Dictionary<string, object>>("ControlModule.Inputs");
+            var forward = inputs.ContainsKey("w");
+            var attention = inputs.ContainsKey("e");
 
             // LCD declarations
             var statusLegsLCD = GridTerminalSystem.GetBlockWithName("LCD Legs Status") as IMyTextPanel;
 
-            // display errors
+            // display
             if (statusLegsLCD != null) {
                 statusLegsLCD.ContentType = ContentType.TEXT_AND_IMAGE;
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
-                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found", true); }
+                statusLegsLCD.WriteText("", false);
+                if (HipHFR == null) { statusLegsLCD.WriteText("HipHFR not found \n", true); }
+                if (HipHBR == null) { statusLegsLCD.WriteText("HipHBR not found \n", true); }
+                if (HipVFR == null) { statusLegsLCD.WriteText("HipVFR not found \n", true); }
+                if (HipVBR == null) { statusLegsLCD.WriteText("HipVBR not found \n", true); }
+                if (KneeFR == null) { statusLegsLCD.WriteText("KneeFR not found \n", true); }
+                if (KneeBR == null) { statusLegsLCD.WriteText("KneeBR not found \n", true); }
+                if (HipHFL == null) { statusLegsLCD.WriteText("HipHFL not found \n", true); }
+                if (HipHBL == null) { statusLegsLCD.WriteText("HipHBL not found \n", true); }
+                if (HipVFL == null) { statusLegsLCD.WriteText("HipVFL not found \n", true); }
+                if (HipVBL == null) { statusLegsLCD.WriteText("HipVBL not found \n", true); }
+                if (KneeFL == null) { statusLegsLCD.WriteText("KneeFL not found \n", true); }
+                if (KneeBL == null) { statusLegsLCD.WriteText("KneeBL not found \n", true); }
+                statusLegsLCD.WriteText("\n", true);
             }
-            else { Echo("Status LCD missing", true); }
+            else { Echo("Status LCD missing"); }
             // logic
+            var positiveSpeed = 20;
+            var negativeSpeed = -20;
+            HipHFR.LowerLimitDeg = -45;
+            HipHFR.UpperLimitDeg = 90;
+            HipHBR.LowerLimitDeg = -90;
+            HipHBR.UpperLimitDeg = 45;
+            var test = true;
+            // attention position
+            if (test == true)
+            {
+                if (HipHFR.Angle > 47 * (Math.PI / 180)) { HipHFR.TargetVelocityRPM = -positiveSpeed * (-47 + Math.Abs(HipHFR.Angle)); } else if (HipHFR.Angle < 43 * (Math.PI / 180)) { HipHFR.TargetVelocityRPM = positiveSpeed * (+43 - Math.Abs(HipHFR.Angle)); } else { HipHFR.TargetVelocityRPM = 0; }
 
+                if (HipHBR.Angle > 47 * (Math.PI / 180)) { HipHBR.TargetVelocityRPM = -positiveSpeed * HipHBR.Angle; } else if (HipHBR.Angle < 43 * (Math.PI / 180)) { HipHBR.TargetVelocityRPM = positiveSpeed * -HipHBR.Angle; } else { HipHBR.TargetVelocityRPM = 0; }
+            }
         }
 
     }
